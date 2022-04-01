@@ -1,0 +1,17 @@
+spring:
+  rabbitmq:
+#    host: 192.168.99.100
+    host: 10.108.187.99
+    password: 12345678
+#    port: 30673
+    username: ois_user
+keycloak:
+  realm: 'oil'
+  auth-server-url: http://192.168.99.100:32305
+#  auth-server-url: http://10.98.196.30:8080
+  ssl-required: external
+  resource: springboot-microservice
+  use-resource-role-mappings: true
+  bearer-only: true
+  credentials:
+    secret: GuFK0tWn1BmKRo6lazCgNl23IL7Q2hPq
