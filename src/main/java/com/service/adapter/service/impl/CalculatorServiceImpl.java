@@ -13,8 +13,6 @@ import java.util.concurrent.Executors;
 @Service
 public class CalculatorServiceImpl implements CalculatorService {
 
-    private static final String NO_RESULT_IN_RESPONSE_FROM_SOAP_CALCULATOR_SERVICE = "No result in response from SOAP calculator service";
-
     private ExecutorService executor = Executors.newFixedThreadPool(5);
 
     private CalculatorSoap calculatorSoap;

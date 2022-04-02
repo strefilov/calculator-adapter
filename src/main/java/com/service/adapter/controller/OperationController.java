@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
+/**
+ * Controller for endpoint RestService
+ */
 @RestController
 @RequestMapping("/calculator")
 public class OperationController {

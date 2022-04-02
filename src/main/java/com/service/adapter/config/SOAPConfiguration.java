@@ -1,6 +1,5 @@
 package com.service.adapter.config;
 
-import com.service.adapter.component.MQComponent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.endpoint.Client;
@@ -14,11 +13,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.tempuri.CalculatorSoap;
 
-import java.net.MalformedURLException;
-
+/**
+ *  Configuration Soap and Rabbit
+ */
 @Configuration
 public class SOAPConfiguration {
     private static final Log LOGGER = LogFactory.getLog(SOAPConfiguration.class);
+
     private static final String URI = "http://www.dneonline.com/calculator.asmx";
 
     private static final String SERVICE_ADAPTER_WSDL = "org.tempuri";
@@ -55,7 +56,7 @@ public class SOAPConfiguration {
     }
 
     @Bean
-    public CalculatorSoap CalculatorSoapCLient()  {
+    public CalculatorSoap CalculatorSoapCLient() {
 
         JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
         factory.setServiceClass(CalculatorSoap.class);
@@ -66,7 +67,7 @@ public class SOAPConfiguration {
             final Client client = ClientProxy.getClient(service);
 
         } catch (Exception e) {
-            LOGGER.error(e,e);
+            LOGGER.error(e, e);
         }
         return service;
     }

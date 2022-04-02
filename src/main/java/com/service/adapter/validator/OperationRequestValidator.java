@@ -6,6 +6,9 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import com.service.adapter.model.OperationRequest;
 
+/**
+ * Validator for OperationRequest, CorrelationIdRequest
+ */
 
 @Component
 public class OperationRequestValidator implements Validator {
@@ -19,7 +22,7 @@ public class OperationRequestValidator implements Validator {
 
     private static final String FIRST_NUMBER = "firstNumber";
     private static final String SECOND_NUMBER = "secondNumber";
-    private static final String correlationId = "correlationId";
+    private static final String CORRELATION_ID = "correlationId";
 
     private static final String VALUE_EMPTY = "";
 
@@ -38,7 +41,7 @@ public class OperationRequestValidator implements Validator {
         }
         if(obj instanceof CorrelationIdRequest){
             CorrelationIdRequest request = (CorrelationIdRequest) obj;
-            fieldValidateString(correlationId, request.getCorrelationId(),errors);
+            fieldValidateString(CORRELATION_ID, request.getCorrelationId(),errors);
         }
     }
 
