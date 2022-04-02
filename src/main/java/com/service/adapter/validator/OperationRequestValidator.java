@@ -11,9 +11,9 @@ import com.service.adapter.model.OperationRequest;
 public class OperationRequestValidator implements Validator {
 
 
-    private static final String VALUE_SHOULD_HAVE_TYPE_INT = "value must be type int";
-    private static final String VALUE_MUST_NOT_BE_NULL = "value must be set";
-    private static final String VALUE_CANNOT_BE_EMPTY = "value can't be null";
+    public static final String VALUE_SHOULD_HAVE_TYPE_INT = "value must be type int";
+    public static final String VALUE_MUST_NOT_BE_NULL = "value must be set";
+    public static final String VALUE_CANNOT_BE_EMPTY = "value can't be null";
 
     private static final String VALUE_NEGATIVE = "value.negative";
 

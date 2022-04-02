@@ -23,9 +23,13 @@
         <swagger.version>2.9.2</swagger.version>
         <jaxb2.version>0.14.0</jaxb2.version>
         <build.helper.version>3.0.0</build.helper.version>
-
-        <wsdl.pojo.dir>ru.service.adapter.wsdl</wsdl.pojo.dir>
+        <cxf.version>3.4.1</cxf.version>
+        <wsdl.pojo.dir>org.tempuri</wsdl.pojo.dir>
         <wsdl.url>http://www.dneonline.com/calculator.asmx?wsdl</wsdl.url>
+
+        <version.jaxb2-basics>0.12.0</version.jaxb2-basics>
+        <version.jaxws-maven-plugin>2.3.1-b20150201.1248</version.jaxws-maven-plugin>
+
     </properties>
 
     <dependencies>
@@ -40,6 +44,12 @@
                 </exclusion>
             </exclusions>
 
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.5</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>
@@ -71,6 +81,11 @@
 
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.ws</groupId>
@@ -130,18 +145,103 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics</artifactId>
+            <version>${version.jaxb2-basics}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-bindings-soap</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-bindings-xml</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-simple</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-ws-addr</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-ws-security</artifactId>
+            <version>3.3.7</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+            <groupId>org.jvnet.jax-ws-commons</groupId>
+            <artifactId>jaxws-maven-plugin</artifactId>
+            <version>${version.jaxws-maven-plugin}</version>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jvnet.jaxb2_commons</groupId>
+                    <artifactId>jaxb2-basics</artifactId>
+                    <version>${version.jaxb2-basics}</version>
+                </dependency>
+            </dependencies>
+            <configuration>
+                <implDestDir>target/generated-sources</implDestDir>
+                <sourceDestDir>target/generated-sources</sourceDestDir>
+                <extension>true</extension>
+                <protocol>Xsoap1.1</protocol>
+                <target>2.0</target>
+                <xjcArgs>
+                    <xjcArg>-target</xjcArg>
+                    <xjcArg>2.0</xjcArg>
+                    <xjcArg>-XtoString</xjcArg>
+                    <xjcArg>-Xequals</xjcArg>
+                    <xjcArg>-XhashCode</xjcArg>
+                    <xjcArg>-XautoNameResolution</xjcArg>
+                </xjcArgs>
+                <vmArgs>
+                    <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+                </vmArgs>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>calculator</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>wsimport</goal>
+                    </goals>
+                    <configuration>
+                        <wsdlUrls>
+                            <wsdlUrl>${wsdl.url}</wsdlUrl>
+                        </wsdlUrls>
+
+                    </configuration>
+                </execution>
+
+            </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${parent.version}</version>
             </plugin>
-
+<!--
             <plugin>
                 <groupId>org.jvnet.jaxb2.maven2</groupId>
                 <artifactId>maven-jaxb2-plugin</artifactId>
@@ -163,7 +263,7 @@
                     </schemas>
                 </configuration>
             </plugin>
-
+-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>

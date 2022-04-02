@@ -56,7 +56,7 @@ public class ValidatorTest {
         Assert.assertTrue(errors.size() == 1);
         Assert.assertTrue(errors.get(0) instanceof FieldError);
         Assert.assertTrue(((FieldError) errors.get(0)).getField().equals("firstNumber"));
-        Assert.assertTrue(errors.get(0).getDefaultMessage().equals("значение не может быть пустым"));
+        Assert.assertTrue(errors.get(0).getDefaultMessage().equals(OperationRequestValidator.VALUE_CANNOT_BE_EMPTY));
     }
 
     @Test
@@ -74,13 +74,13 @@ public class ValidatorTest {
         Assert.assertTrue(errors.size() == 1);
         Assert.assertTrue(errors.get(0) instanceof FieldError);
         Assert.assertTrue(((FieldError) errors.get(0)).getField().equals("secondNumber"));
-        Assert.assertTrue(errors.get(0).getDefaultMessage().equals("значение не может отсутствовать"));
+        Assert.assertTrue(errors.get(0).getDefaultMessage().equals(OperationRequestValidator.VALUE_MUST_NOT_BE_NULL));
     }
 
     @Test
     public void testValueIsNotInt(){
         final OperationRequest operationRequest = new OperationRequest();
-        operationRequest.setFirstNumber("два");
+        operationRequest.setFirstNumber("two");
         operationRequest.setSecondNumber("2");
 
         final DataBinder dataBinder = new DataBinder(operationRequest);
@@ -92,7 +92,7 @@ public class ValidatorTest {
         Assert.assertTrue(errors.size() == 1);
         Assert.assertTrue(errors.get(0) instanceof FieldError);
         Assert.assertTrue(((FieldError) errors.get(0)).getField().equals("firstNumber"));
-        Assert.assertTrue(errors.get(0).getDefaultMessage().equals("значение должно иметь тип int"));
+        Assert.assertTrue(errors.get(0).getDefaultMessage().equals(OperationRequestValidator.VALUE_SHOULD_HAVE_TYPE_INT));
     }
 
     @Test

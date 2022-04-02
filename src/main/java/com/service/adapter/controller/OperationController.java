@@ -7,8 +7,6 @@ import com.service.adapter.model.CorrelationIdResponse;
 import com.service.adapter.model.OperationRequest;
 import com.service.adapter.model.OperationResponse;
 import com.service.adapter.service.CalculatorService;
-import org.keycloak.representations.AccessToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
@@ -72,45 +70,6 @@ public class OperationController {
         return new OperationResponse(calculatorService.getResoult4add(request.getCorrelationId()));
     }
 
-    @RolesAllowed("user")
-    @PostMapping(path = "/divideresult", produces = "application/json")
-    public OperationResponse divideNumbersResult(@RequestBody @Valid CorrelationIdRequest request,
-        BindingResult bindingResult, @RequestHeader(value = "Authorization", required = false) String Authorization) {
-        if (bindingResult.hasErrors())
-            throw new RequestValueException(
-                mapper.objectErrorsToValidationErrors(
-                    bindingResult.getAllErrors()
-                )
-            );
-        return new OperationResponse(calculatorService.getResoult4divide(request.getCorrelationId()));
-    }
-
-    @RolesAllowed("user")
-    @PostMapping(path = "/multiplyresult", produces = "application/json")
-    public OperationResponse multiplyNumbersResult(@RequestBody @Valid CorrelationIdRequest request,
-        BindingResult bindingResult, @RequestHeader(value = "Authorization", required = false) String Authorization) {
-        if (bindingResult.hasErrors())
-            throw new RequestValueException(
-                mapper.objectErrorsToValidationErrors(
-                    bindingResult.getAllErrors()
-                )
-            );
-        return new OperationResponse(calculatorService.getResoult4multiply(request.getCorrelationId()));
-    }
-
-    @RolesAllowed("user")
-    @PostMapping(path = "/subtractresult", produces = "application/json")
-    public OperationResponse subtractNumbersResult(@RequestBody @Valid CorrelationIdRequest request,
-        BindingResult bindingResult, @RequestHeader(value = "Authorization", required = false) String Authorization) {
-        if (bindingResult.hasErrors())
-            throw new RequestValueException(
-                mapper.objectErrorsToValidationErrors(
-                    bindingResult.getAllErrors()
-                )
-            );
-        return new OperationResponse(calculatorService.getResoult4subtract(request.getCorrelationId()));
-    }
-
     private String genarationId() {
         return java.util.UUID.randomUUID().toString();
     }
@@ -135,6 +94,19 @@ public class OperationController {
     }
 
     @RolesAllowed("user")
+    @PostMapping(path = "/divideresult", produces = "application/json")
+    public OperationResponse divideNumbersResult(@RequestBody @Valid CorrelationIdRequest request,
+        BindingResult bindingResult, @RequestHeader(value = "Authorization", required = false) String Authorization) {
+        if (bindingResult.hasErrors())
+            throw new RequestValueException(
+                mapper.objectErrorsToValidationErrors(
+                    bindingResult.getAllErrors()
+                )
+            );
+        return new OperationResponse(calculatorService.getResoult4divide(request.getCorrelationId()));
+    }
+
+    @RolesAllowed("user")
     @PostMapping(path = "/multiply", produces = "application/json")
     public CorrelationIdResponse multiplyNumbers(@RequestBody @Valid OperationRequest request,
         BindingResult bindingResult, @RequestHeader(value = "Authorization", required = false) String Authorization) {
@@ -151,6 +123,19 @@ public class OperationController {
             correlationId
         );
         return new CorrelationIdResponse(correlationId);
+    }
+
+    @RolesAllowed("user")
+    @PostMapping(path = "/multiplyresult", produces = "application/json")
+    public OperationResponse multiplyNumbersResult(@RequestBody @Valid CorrelationIdRequest request,
+        BindingResult bindingResult, @RequestHeader(value = "Authorization", required = false) String Authorization) {
+        if (bindingResult.hasErrors())
+            throw new RequestValueException(
+                mapper.objectErrorsToValidationErrors(
+                    bindingResult.getAllErrors()
+                )
+            );
+        return new OperationResponse(calculatorService.getResoult4multiply(request.getCorrelationId()));
     }
 
     @RolesAllowed("user")
@@ -172,4 +157,16 @@ public class OperationController {
         return new CorrelationIdResponse(correlationId);
     }
 
+    @RolesAllowed("user")
+    @PostMapping(path = "/subtractresult", produces = "application/json")
+    public OperationResponse subtractNumbersResult(@RequestBody @Valid CorrelationIdRequest request,
+        BindingResult bindingResult, @RequestHeader(value = "Authorization", required = false) String Authorization) {
+        if (bindingResult.hasErrors())
+            throw new RequestValueException(
+                mapper.objectErrorsToValidationErrors(
+                    bindingResult.getAllErrors()
+                )
+            );
+        return new OperationResponse(calculatorService.getResoult4subtract(request.getCorrelationId()));
+    }
 }

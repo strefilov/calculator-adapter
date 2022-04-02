@@ -12,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
-
 @Component
 public class MQComponent {
     @Autowired
@@ -23,12 +21,13 @@ public class MQComponent {
     private RabbitTemplate rabbitTemplate;
 
     private static final Log LOGGER = LogFactory.getLog(MQComponent.class);
+
     public void send(String correlationId, String body) {
         try {
 
             MessageProperties props = MessagePropertiesBuilder.newInstance()
                 .setContentType(MessageProperties.CONTENT_TYPE_TEXT_PLAIN)
-                .setCorrelationId("" + correlationId)
+                .setCorrelationId(correlationId)
                 .build();
             Message message = MessageBuilder.withBody(body.getBytes())
                 .andProperties(props)
@@ -36,15 +35,14 @@ public class MQComponent {
 
             amqpAdmin.declareQueue(new Queue(SOAPConfiguration.queueName + correlationId, false));
             Binding binding = BindingBuilder.bind(new Queue(SOAPConfiguration.queueName + correlationId, false))
-                .to(new TopicExchange(SOAPConfiguration.topicExchangeName)).with("" + correlationId);
-           // binding.getArguments().put("CorrelationId",correlationId);
+                .to(new TopicExchange(SOAPConfiguration.topicExchangeName)).with(correlationId);
             amqpAdmin.declareBinding(
                 binding
             );
-            rabbitTemplate.convertAndSend(SOAPConfiguration.topicExchangeName, "" + correlationId,
+            rabbitTemplate.convertAndSend(SOAPConfiguration.topicExchangeName, correlationId,
                 message);
         } catch (AmqpConnectException e) {
-            LOGGER.error(e,e);
+            LOGGER.error(e, e);
         }
     }
 
@@ -56,14 +54,22 @@ public class MQComponent {
                 amqpAdmin.deleteQueue(SOAPConfiguration.queueName + correlationId);
                 return Integer.valueOf(new String(result.getBody()));
             }
-        } catch (Exception e) {
-            LOGGER.error(e,e);
+        } catch (NumberFormatException e) {
+            LOGGER.error(e, e);
             String message = e.getMessage();
-            if(e.getCause() != null && e.getCause().getCause() != null){
-                message =  e.getCause().getCause().getLocalizedMessage();
+            if (e.getCause() != null && e.getCause().getCause() != null) {
+                message = e.getCause().getCause().getLocalizedMessage();
             }
             throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND," not found correlationId = "+correlationId+" " + message, e);
+                HttpStatus.BAD_REQUEST, " found error in correlationId = " + correlationId + " " + message, e);
+        } catch (AmqpIOException e) {
+            LOGGER.error(e, e);
+            String message = e.getMessage();
+            if (e.getCause() != null && e.getCause().getCause() != null) {
+                message = e.getCause().getCause().getLocalizedMessage();
+            }
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, " not found in correlationId = " + correlationId + " " + message, e);
         }
         return null;
     }

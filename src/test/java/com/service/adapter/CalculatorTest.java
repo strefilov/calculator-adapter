@@ -32,14 +32,14 @@ public class CalculatorTest {
 
     @Test
     public void addTest() {
-        calculatorService.add(2, 5, anyString());
-        Assert.assertTrue(salsaOrderDetailsResult.getResoult4add("12342") == 7);
+        calculatorService.add(2, 5, "123421");
+        Assert.assertTrue(salsaOrderDetailsResult.getResoult4add("123421") == 7);
     }
 
     @Test
     public void divideTest() {
         calculatorService.divide(4, 2, "12342");
-        Assert.assertTrue(salsaOrderDetailsResult.getResoult4divide("") == 2);
+        Assert.assertTrue(salsaOrderDetailsResult.getResoult4divide("12342") == 2);
     }
 
     @Test

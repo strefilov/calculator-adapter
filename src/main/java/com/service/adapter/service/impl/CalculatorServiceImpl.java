@@ -1,14 +1,12 @@
 package com.service.adapter.service.impl;
 
-import com.service.adapter.client.CalculatorSOAPClient;
 import com.service.adapter.component.MQComponent;
-import com.service.adapter.exception.SoapResultException;
-import com.service.adapter.model.error.Error;
 import com.service.adapter.service.CalculatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.service.adapter.wsdl.*;
+import org.tempuri.CalculatorSoap;
 
+import javax.xml.ws.soap.SOAPFaultException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,78 +17,39 @@ public class CalculatorServiceImpl implements CalculatorService {
 
     private ExecutorService executor = Executors.newFixedThreadPool(5);
 
-    private CalculatorSOAPClient calculatorSOAPClient;
+    private CalculatorSoap calculatorSoap;
 
     @Autowired
     private MQComponent mQComponent;
 
-    public CalculatorServiceImpl(CalculatorSOAPClient calculatorSOAPClient) {
-        this.calculatorSOAPClient = calculatorSOAPClient;
+    public CalculatorServiceImpl(CalculatorSoap calculatorSoap) {
+        this.calculatorSoap = calculatorSoap;
     }
 
     private int add(int firstNumber, int secondNumber) {
-        Add add = new Add();
-        add.setIntA(firstNumber);
-        add.setIntB(secondNumber);
-        AddResponse response = calculatorSOAPClient.add(add);
-
-        if (response == null)
-            throw new SoapResultException(
-                new Error(NO_RESULT_IN_RESPONSE_FROM_SOAP_CALCULATOR_SERVICE)
-            );
-
-        return response.getAddResult();
+        return calculatorSoap.add(firstNumber, secondNumber);
     }
 
     private int divide(int firstNumber, int secondNumber) {
-        Divide divide = new Divide();
-        divide.setIntA(firstNumber);
-        divide.setIntB(secondNumber);
-        DivideResponse response = calculatorSOAPClient.divide(divide);
-
-        if (response == null)
-            throw new SoapResultException(
-                new Error(NO_RESULT_IN_RESPONSE_FROM_SOAP_CALCULATOR_SERVICE)
-            );
-
-        return response.getDivideResult();
+        return calculatorSoap.divide(firstNumber, secondNumber);
     }
 
     private int multiply(int firstNumber, int secondNumber) {
-        Multiply multiply = new Multiply();
-        multiply.setIntA(firstNumber);
-        multiply.setIntB(secondNumber);
-        MultiplyResponse response = calculatorSOAPClient.multiply(multiply);
-
-        if (response == null)
-            throw new SoapResultException(
-                new Error(NO_RESULT_IN_RESPONSE_FROM_SOAP_CALCULATOR_SERVICE)
-            );
-
-        return response.getMultiplyResult();
+        return calculatorSoap.multiply(firstNumber, secondNumber);
     }
 
     private int subtract(int firstNumber, int secondNumber) {
-        Subtract subtract = new Subtract();
-        subtract.setIntA(firstNumber);
-        subtract.setIntB(secondNumber);
-        SubtractResponse response = calculatorSOAPClient.subtract(subtract);
-
-        if (response == null)
-            throw new SoapResultException(
-                new Error(NO_RESULT_IN_RESPONSE_FROM_SOAP_CALCULATOR_SERVICE)
-            );
-
-        return response.getSubtractResult();
+        return calculatorSoap.subtract(firstNumber, secondNumber);
     }
 
     @Override
     public void add(int firstNumber, int secondNumber, String correlationId) {
         executor.execute(
-            new Runnable() {
-                @Override
-                public void run() {
+            () -> {
+                try {
                     mQComponent.send(correlationId, Integer.toString(add(firstNumber, secondNumber)));
+                } catch (SOAPFaultException e) {
+                    mQComponent.send(correlationId, e.getMessage());
                 }
             });
 
@@ -104,11 +63,14 @@ public class CalculatorServiceImpl implements CalculatorService {
     @Override
     public void divide(int firstNumber, int secondNumber, String correlationId) {
         executor.execute(
-            new Runnable() {
-                @Override
-                public void run() {
+            () -> {
+                try {
+
                     mQComponent.send(correlationId, Integer.toString(divide(firstNumber, secondNumber)));
+                } catch (SOAPFaultException e) {
+                    mQComponent.send(correlationId, e.getMessage());
                 }
+
             });
     }
 
@@ -120,11 +82,13 @@ public class CalculatorServiceImpl implements CalculatorService {
     @Override
     public void multiply(int firstNumber, int secondNumber, String correlationId) {
         executor.execute(
-            new Runnable() {
-                @Override
-                public void run() {
+            () -> {
+                try {
                     mQComponent.send(correlationId, Integer.toString(multiply(firstNumber, secondNumber)));
+                } catch (SOAPFaultException e) {
+                    mQComponent.send(correlationId, e.getMessage());
                 }
+
             });
     }
 
@@ -136,11 +100,13 @@ public class CalculatorServiceImpl implements CalculatorService {
     @Override
     public void subtract(int firstNumber, int secondNumber, String correlationId) {
         executor.execute(
-            new Runnable() {
-                @Override
-                public void run() {
+            () -> {
+                try {
                     mQComponent.send(correlationId, Integer.toString(subtract(firstNumber, secondNumber)));
+                } catch (SOAPFaultException e) {
+                    mQComponent.send(correlationId, e.getMessage());
                 }
+
             });
     }
 
