@@ -185,66 +185,50 @@
             <artifactId>cxf-rt-ws-security</artifactId>
             <version>3.3.7</version>
         </dependency>
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-tools</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
         <plugins>
 
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
+                <groupId>com.sun.xml.ws</groupId>
                 <artifactId>jaxws-maven-plugin</artifactId>
-                <version>2.4.1</version>
-                <configuration>
-                    <vmArgs>
-                        <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
-                    </vmArgs>
-                </configuration>
-            </plugin>
-        <plugin>
-            <groupId>org.jvnet.jax-ws-commons</groupId>
-            <artifactId>jaxws-maven-plugin</artifactId>
-            <version>${version.jaxws-maven-plugin}</version>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jvnet.jaxb2_commons</groupId>
-                    <artifactId>jaxb2-basics</artifactId>
-                    <version>${version.jaxb2-basics}</version>
-                </dependency>
-            </dependencies>
-            <configuration>
-                <implDestDir>target/generated-sources</implDestDir>
-                <sourceDestDir>target/generated-sources</sourceDestDir>
-                <extension>true</extension>
-                <protocol>Xsoap1.1</protocol>
-                <target>2.0</target>
-                <xjcArgs>
-                    <xjcArg>-target</xjcArg>
-                    <xjcArg>2.0</xjcArg>
-                    <xjcArg>-XtoString</xjcArg>
-                    <xjcArg>-Xequals</xjcArg>
-                    <xjcArg>-XhashCode</xjcArg>
-                    <xjcArg>-XautoNameResolution</xjcArg>
-                </xjcArgs>
-                <vmArgs>
-                    <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
-                </vmArgs>
-            </configuration>
-            <executions>
-                <execution>
-                    <id>calculator</id>
-                    <phase>generate-sources</phase>
-                    <goals>
-                        <goal>wsimport</goal>
-                    </goals>
-                    <configuration>
-                        <wsdlUrls>
-                            <wsdlUrl>${wsdl.url}</wsdlUrl>
-                        </wsdlUrls>
+                <version>2.3.2</version>
+                <executions>
 
-                    </configuration>
-                </execution>
+                    <execution>
+                        <id>calculator</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlUrls>
+                                <wsdlUrl>${wsdl.url}</wsdlUrl>
+                            </wsdlUrls>
 
-            </executions>
+                        </configuration>
+                    </execution>
+
+                </executions>
             </plugin>
 
             <plugin>
@@ -252,29 +236,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${parent.version}</version>
             </plugin>
-<!--
-            <plugin>
-                <groupId>org.jvnet.jaxb2.maven2</groupId>
-                <artifactId>maven-jaxb2-plugin</artifactId>
-                <version>${jaxb2.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <schemaLanguage>WSDL</schemaLanguage>
-                    <generatePackage>${wsdl.pojo.dir}</generatePackage>
-                    <schemas>
-                        <schema>
-                            <url>${wsdl.url}</url>
-                        </schema>
-                    </schemas>
-                </configuration>
-            </plugin>
--->
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -298,20 +260,20 @@
                 <groupId>org.eclipse.jkube</groupId>
                 <artifactId>kubernetes-maven-plugin</artifactId>
                 <version>1.7.0</version>
- <configuration>
-      <images>
-        <image>
-          <!-- Registry: quay.io -->
-          <!-- Username: rohankanojia -->
+                <configuration>
+                    <images>
+                        <image>
+                            <!-- Registry: quay.io -->
+                            <!-- Username: rohankanojia -->
 
-          <name>quay.io/rohankanojia/helloapp:${project.version}</name>
-          <build>
-            <from>openjdk:8-jdk</from>
-	    <cmd>java -jar maven/${project.artifactId}-${project.version}.jar</cmd>
-          </build>
-        </image>
-      </images>
-    </configuration>
+                            <name>quay.io/rohankanojia/helloapp:${project.version}</name>
+                            <build>
+                                <from>openjdk:8-jdk</from>
+                                <cmd>java -jar maven/${project.artifactId}-${project.version}.jar</cmd>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
