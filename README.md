@@ -21,9 +21,9 @@ keycloak:
 ### run
 
 run in cmd  with admin rules  
- minikube docker-env
+ >"minikube docker-env"
 add all veribles to build.bat
 execute: 
-    build.bat
+    >build.bat
 create external service for calculator. 
-    kubectl apply -f kubernetes\calculator-adapter.yml 
+    >"kubectl apply -f kubernetes\calculator-adapter.yml" 
