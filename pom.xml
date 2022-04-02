@@ -189,7 +189,18 @@
 
     <build>
         <plugins>
+
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <vmArgs>
+                        <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+                    </vmArgs>
+                </configuration>
+            </plugin>
+        <plugin>
             <groupId>org.jvnet.jax-ws-commons</groupId>
             <artifactId>jaxws-maven-plugin</artifactId>
             <version>${version.jaxws-maven-plugin}</version>
@@ -296,7 +307,7 @@
           <name>quay.io/rohankanojia/helloapp:${project.version}</name>
           <build>
             <from>openjdk:8-jdk</from>
-            <cmd>java -jar maven/${project.artifactId}-${project.version}.jar</cmd>
+	    <cmd>java -jar maven/${project.artifactId}-${project.version}.jar</cmd>
           </build>
         </image>
       </images>

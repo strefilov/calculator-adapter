@@ -3,7 +3,7 @@
 ### Description
 Project REST-service-adaptor for SOAP webservice http://www.dneonline.com/calculator.asmx
 xx.xxx.xxx.xxx:31677/swagger-ui.html
-xx.xxx.xxx.xxx adress minikube
+xx.xxx.xxx.xxx address minikube
 ### setting
 rabbit 
     execute import rabbit_rabbitmq-minikube.json by admin console.

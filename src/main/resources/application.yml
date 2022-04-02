@@ -1,9 +1,9 @@
 spring:
   rabbitmq:
-    host: 192.168.99.100
-#    host: 10.108.187.99
+##    host: 192.168.99.100
+    host: 10.108.187.99
     password: 12345678
-    port: 30673
+#    port: 30673
     username: ois_user
 keycloak:
   realm: 'oil'
